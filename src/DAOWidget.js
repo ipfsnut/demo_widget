@@ -42,9 +42,36 @@ const DAOWidget = () => {
   const fetchActiveProposals = async () => {
     // Simulating API call
     setActiveProposals([
-      { id: 1, title: 'Proposal 1', dao: 1, description: 'This is proposal 1', votesFor: 10, votesAgainst: 5, totalEligibleVotes: 100 },
-      { id: 2, title: 'Proposal 2', dao: 2, description: 'This is proposal 2', votesFor: 15, votesAgainst: 7, totalEligibleVotes: 100 },
-      { id: 3, title: 'Proposal 3', dao: 1, description: 'This is proposal 3', votesFor: 20, votesAgainst: 18, totalEligibleVotes: 100 },
+      { 
+        id: 1, 
+        title: 'Proposal 1', 
+        dao: 1, 
+        description: 'This is proposal 1', 
+        votesFor: 10, 
+        votesAgainst: 5, 
+        totalEligibleVotes: 100,
+        endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days from now
+      },
+      { 
+        id: 2, 
+        title: 'Proposal 2', 
+        dao: 2, 
+        description: 'This is proposal 2', 
+        votesFor: 15, 
+        votesAgainst: 7, 
+        totalEligibleVotes: 100,
+        endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days from now
+      },
+      { 
+        id: 3, 
+        title: 'Proposal 3', 
+        dao: 1, 
+        description: 'This is proposal 3', 
+        votesFor: 20, 
+        votesAgainst: 18, 
+        totalEligibleVotes: 100,
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days from now
+      },
     ]);
   };
 
