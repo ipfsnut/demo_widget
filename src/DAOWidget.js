@@ -15,11 +15,20 @@ const DAOWidget = () => {
   const [followedDAOs, setFollowedDAOs] = useState([]);
   const [activeProposals, setActiveProposals] = useState([]);
   const [selectedDAO, setSelectedDAO] = useState(null);
+  const [votingPower, setVotingPower] = useState(0);
+  const [userStakedAmount, setUserStakedAmount] = useState(0);
 
   useEffect(() => {
     fetchFollowedDAOs();
     fetchActiveProposals();
   }, []);
+
+  useEffect(() => {
+    if (selectedDAO) {
+      fetchVotingPower(selectedDAO);
+      fetchUserStakedAmount(selectedDAO);
+    }
+  }, [selectedDAO]);
 
   const fetchFollowedDAOs = async () => {
     // Simulating API call
@@ -33,22 +42,43 @@ const DAOWidget = () => {
   const fetchActiveProposals = async () => {
     // Simulating API call
     setActiveProposals([
-      { id: 1, title: 'Proposal 1', dao: 1 },
-      { id: 2, title: 'Proposal 2', dao: 2 },
-      { id: 3, title: 'Proposal 3', dao: 1 },
+      { id: 1, title: 'Proposal 1', dao: 1, description: 'This is proposal 1', votesFor: 10, votesAgainst: 5, totalEligibleVotes: 100 },
+      { id: 2, title: 'Proposal 2', dao: 2, description: 'This is proposal 2', votesFor: 15, votesAgainst: 7, totalEligibleVotes: 100 },
+      { id: 3, title: 'Proposal 3', dao: 1, description: 'This is proposal 3', votesFor: 20, votesAgainst: 18, totalEligibleVotes: 100 },
     ]);
   };
 
+  const fetchVotingPower = async (daoId) => {
+    // Simulating API call
+    setVotingPower(Math.floor(Math.random() * 100));
+  };
+
+  const fetchUserStakedAmount = async (daoId) => {
+    // Simulating API call
+    setUserStakedAmount(Math.floor(Math.random() * 1000));
+  };
+
   const handleVote = (proposalId, vote) => {
-    console.log(`Voted ${vote} on proposal ${proposalId}`);
-    // Implement actual voting logic here
+    setActiveProposals(proposals =>
+      proposals.map(p =>
+        p.id === proposalId
+          ? { ...p, [vote === 'Yes' ? 'votesFor' : 'votesAgainst']: p[vote === 'Yes' ? 'votesFor' : 'votesAgainst'] + 1 }
+          : p
+      )
+    );
+  };
+
+  const handleDelegation = (delegateId, amount) => {
+    console.log(`Delegated ${amount} $PAGE to delegate ${delegateId}`);
+    // Here you would typically make an API call to perform the delegation
   };
 
   return (
-    <div className="dao-widget">
+    <div className="dao-widget" style={{ fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
       <DAOOverview 
         daos={followedDAOs} 
         onSelectDAO={setSelectedDAO} 
+        selectedDAO={selectedDAO}
       />
       <NotificationCenter />
       <EducationalResources />
@@ -56,8 +86,11 @@ const DAOWidget = () => {
       
       {selectedDAO && (
         <>
-          <VotingPowerCalculator dao={selectedDAO} />
-          <Delegation dao={selectedDAO} />
+          <VotingPowerCalculator votingPower={votingPower} />
+          <Delegation 
+            userStakedAmount={userStakedAmount} 
+            onDelegate={handleDelegation} 
+          />
           <ProposalAnalytics proposals={activeProposals.filter(p => p.dao === selectedDAO)} />
           <VotingOpportunities 
             proposals={activeProposals.filter(p => p.dao === selectedDAO)} 
@@ -74,12 +107,21 @@ const DAOWidget = () => {
   );
 };
 
-const DAOOverview = ({ daos, onSelectDAO }) => (
-  <div className="dao-overview">
+const DAOOverview = ({ daos, onSelectDAO, selectedDAO }) => (
+  <div className="dao-overview" style={{ marginBottom: '20px' }}>
     <h2>Your DAOs</h2>
-    <ul>
+    <ul style={{ listStyle: 'none', padding: 0 }}>
       {daos.map(dao => (
-        <li key={dao.id} onClick={() => onSelectDAO(dao.id)}>
+        <li 
+          key={dao.id} 
+          onClick={() => onSelectDAO(dao.id)}
+          style={{ 
+            cursor: 'pointer', 
+            padding: '10px', 
+            backgroundColor: selectedDAO === dao.id ? '#e0e0e0' : 'transparent',
+            marginBottom: '5px'
+          }}
+        >
           {dao.name}
         </li>
       ))}
@@ -88,14 +130,18 @@ const DAOOverview = ({ daos, onSelectDAO }) => (
 );
 
 const VotingOpportunities = ({ proposals, onVote }) => (
-  <div className="voting-opportunities">
+  <div className="voting-opportunities" style={{ marginBottom: '20px' }}>
     <h2>Active Proposals</h2>
-    <ul>
+    <ul style={{ listStyle: 'none', padding: 0 }}>
       {proposals.map(proposal => (
-        <li key={proposal.id}>
-          {proposal.title}
-          <button onClick={() => onVote(proposal.id, 'Yes')}>Yes</button>
-          <button onClick={() => onVote(proposal.id, 'No')}>No</button>
+        <li key={proposal.id} style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '10px' }}>
+          <h3>{proposal.title}</h3>
+          <p>{proposal.description}</p>
+          <div>Votes For: {proposal.votesFor} | Votes Against: {proposal.votesAgainst}</div>
+          <div style={{ marginTop: '10px' }}>
+            <button onClick={() => onVote(proposal.id, 'Yes')} style={{ marginRight: '10px' }}>Yes</button>
+            <button onClick={() => onVote(proposal.id, 'No')}>No</button>
+          </div>
         </li>
       ))}
     </ul>
