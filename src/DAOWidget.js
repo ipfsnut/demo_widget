@@ -4,7 +4,7 @@ import Delegation from './components/Delegation';
 import NotificationCenter from './components/NotificationCenter';
 import EducationalResources from './components/EducationalResources';
 import ProposalDraftingTool from './components/ProposalDraftingTool';
-import GovernanceForum from './components/GovernanceForum';
+import CharmverseDiscussion from './components/CharmverseDiscussion';
 import VotingPowerCalculator from './components/VotingPowerCalculator';
 import HistoricalView from './components/HistoricalView';
 import ImpactVisualization from './components/ImpactVisualization';
@@ -125,7 +125,7 @@ const DAOWidget = () => {
           />
           <QuorumTracker proposals={activeProposals.filter(p => p.dao === selectedDAO)} />
           <ProposalDraftingTool dao={selectedDAO} />
-          <GovernanceForum dao={selectedDAO} />
+          <CharmverseDiscussion selectedDAO={selectedDAO} />
           <HistoricalView dao={selectedDAO} />
           <ImpactVisualization dao={selectedDAO} />
         </>
