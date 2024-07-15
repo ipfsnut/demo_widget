@@ -22,13 +22,26 @@ const DAOWidget = () => {
   }, []);
 
   const fetchFollowedDAOs = async () => {
-    // API call to get user's followed DAOs
-    // setFollowedDAOs(result);
+    // Simulating API call
+    setFollowedDAOs([
+      { id: 1, name: 'DAO 1' },
+      { id: 2, name: 'DAO 2' },
+      { id: 3, name: 'DAO 3' },
+    ]);
   };
 
   const fetchActiveProposals = async () => {
-    // API call to get active proposals from followed DAOs
-    // setActiveProposals(result);
+    // Simulating API call
+    setActiveProposals([
+      { id: 1, title: 'Proposal 1', dao: 1 },
+      { id: 2, title: 'Proposal 2', dao: 2 },
+      { id: 3, title: 'Proposal 3', dao: 1 },
+    ]);
+  };
+
+  const handleVote = (proposalId, vote) => {
+    console.log(`Voted ${vote} on proposal ${proposalId}`);
+    // Implement actual voting logic here
   };
 
   return (
@@ -61,6 +74,32 @@ const DAOWidget = () => {
   );
 };
 
-// Other component definitions (DAOOverview, VotingOpportunities) remain the same
+const DAOOverview = ({ daos, onSelectDAO }) => (
+  <div className="dao-overview">
+    <h2>Your DAOs</h2>
+    <ul>
+      {daos.map(dao => (
+        <li key={dao.id} onClick={() => onSelectDAO(dao.id)}>
+          {dao.name}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const VotingOpportunities = ({ proposals, onVote }) => (
+  <div className="voting-opportunities">
+    <h2>Active Proposals</h2>
+    <ul>
+      {proposals.map(proposal => (
+        <li key={proposal.id}>
+          {proposal.title}
+          <button onClick={() => onVote(proposal.id, 'Yes')}>Yes</button>
+          <button onClick={() => onVote(proposal.id, 'No')}>No</button>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 export default DAOWidget;
